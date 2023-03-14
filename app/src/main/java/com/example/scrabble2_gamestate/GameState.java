@@ -102,19 +102,6 @@ public class GameState {
         playerId = 1;
     }
 
-
-    public boolean swapPressed(int playerId, char letterPlay){
-    if(validMove) {
-
-     return true;
-    }
-
-
-else{
-    return false;
-    }
-    }
-
     public boolean startGame(boolean pressed){
         if(iqLevel != 0){
             gameRunning = true;
@@ -163,9 +150,9 @@ else{
         }
     }
 
-    public boolean swapper(int playId, char playTile){
+    public boolean swapper(int playId, Tile playTile){
         if(validMove){
-
+        bag.add(playTile);
             return true;
         }
         else{
