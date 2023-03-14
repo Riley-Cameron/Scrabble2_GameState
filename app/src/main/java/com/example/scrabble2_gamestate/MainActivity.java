@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button runTest = findViewById(R.id.run_test);
         EditText gsInfo = findViewById(R.id.game_state_info);
-        GameState gs = new GameState("info");
+        GameState gs = new GameState();
 
         runTest.setOnClickListener(new View.OnClickListener() {
             @Override
