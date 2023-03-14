@@ -40,7 +40,6 @@ public class GameState {
         this.board = board;
         p1Score = 0;
         p2Score = 0;
-        isTitleScreen = false;
         iqLevel = 0;
         bag = b;
         letterInPlay = ' ';
