@@ -3,6 +3,7 @@ package com.example.scrabble2_gamestate;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author Riley Cameron
@@ -32,6 +33,8 @@ public class GameState {
     public String hintWord;
     public boolean isPlayed;
 
+    public HashMap<Character, Integer> letterScore = new HashMap<>();
+
     public GameState() {
         dictionary = new ScrabbleDictionary();
         isSwap = false;
@@ -50,6 +53,7 @@ public class GameState {
         letterInPlay = ' ';
         hintWord = " ";
         isPlayed = false;
+
     }
 
     public ArrayList<Tile> makeBag() {
