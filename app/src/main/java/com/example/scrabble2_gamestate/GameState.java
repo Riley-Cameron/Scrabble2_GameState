@@ -3,6 +3,7 @@ package com.example.scrabble2_gamestate;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author Riley Cameron
