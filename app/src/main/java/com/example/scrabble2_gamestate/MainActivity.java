@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         runTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 gsInfo.setText(gs.toString());
             }
         });

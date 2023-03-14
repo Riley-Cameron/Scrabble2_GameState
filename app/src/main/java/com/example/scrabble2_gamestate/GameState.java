@@ -59,6 +59,6 @@ public class GameState {
     @NonNull
     @Override
     public String toString() {
-        return test;
+        return null;
     }
 }
