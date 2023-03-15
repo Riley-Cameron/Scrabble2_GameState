@@ -62,6 +62,7 @@ public class GameState {
         }
 
         iqLevel = 0;
+        makeBag(bag);//TODO: implement makeBag method
         letterInPlay = ' ';
         hintWord = " ";
         isPlayed = false;
@@ -155,9 +156,9 @@ public class GameState {
         }
     }
 
-    public boolean swapper(int playId, char playTile){
+    public boolean swapper(int playId, Tile playTile){
         if(validMove){
-
+        bag.add(playTile);
             return true;
         }
         else{
