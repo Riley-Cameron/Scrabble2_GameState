@@ -325,17 +325,23 @@ public class GameState {
         return bag.remove(0);
     }
 
+    /**
+     * This method describes the state of the game as a string.
+     * Prints the values of all the variables in the game state.
+     */
+
     @NonNull
     @Override
     public String toString() {
-        //Temporary toString to print out player tiles, feel free to change or get rid of in a merge - Riley
+        //print player 1 tiles
         String test = "";
-        test = test.concat("Player1 Hand: ");
+        test = test.concat("Player1 tiles: ");
         for (int i = 0; i < player1Tiles.size(); i++) {
             test = test.concat("[" + player1Tiles.get(i).getLetter() + "]");
         }
 
-        test = test.concat("\nPlayer2 Hand: ");
+        //print player 2 tiles
+        test = test.concat("\nPlayer2 tiles: ");
         for (int i = 0; i < player2Tiles.size(); i++) {
             test = test.concat("[" + player2Tiles.get(i).getLetter() + "]");
         }
@@ -349,11 +355,79 @@ public class GameState {
             }
             test = test.concat("\n");
         }
-
+        //print letters in bag
         test = test.concat("\n Letters in the Bag: ");
         for (int i = 0; i< bag.size(); i++) {
             test = test.concat(bag.get(i).getLetter() + " ");
         }
+        //print the player's turn
+       test = test.concat("\n Player turn: ");
+        String playerTurnString = String.valueOf(playerTurn);
+        test = test.concat(playerTurnString);
+
+        //print the game running state (boolean value)
+        test = test.concat("\n Game running: ");
+        String gameStateString = String.valueOf(gameRunning);
+        test = test.concat(gameStateString);
+
+        //print double letters (boolean value)
+        test = test.concat("\n Double letter: ");
+        String isDoubleLetterString = String.valueOf(isDoubleLetter);
+        test = test.concat(isDoubleLetterString);
+
+        //print double words (boolean value)
+        test = test.concat("\n Double word: ");
+        String isDoubleWordString = String.valueOf(isDoubleWord);
+        test = test.concat(isDoubleWordString);
+
+        //print player 1 score
+        test = test.concat("\n Player 1 score: ");
+        String player1ScoreString = String.valueOf(p1Score);
+        test = test.concat(player1ScoreString);
+
+        //print player 2 score
+        test = test.concat("\n Player 2 score: ");
+        String player2ScoreString = String.valueOf(p2Score);
+        test = test.concat(player2ScoreString);
+
+        //print Iq Level
+        test = test.concat("\n Iq Level: ");
+        String iqLevelString = String.valueOf(iqLevel);
+        test = test.concat(iqLevelString);
+
+        //print the letter in play
+        test = test.concat("\n Letter in play: ");
+        String letterInPlayString = String.valueOf(letterInPlay);
+        test = test.concat(letterInPlayString);
+
+        //print the hint word
+        test = test.concat("\n HintWord: ");
+        test = test.concat(hintWord);
+
+        //print move played (boolean value)
+        test = test.concat("\n Move played: ");
+        String isPlayedString = String.valueOf(isPlayed);
+        test = test.concat(isPlayedString);
+
+        //print valid move (boolean value)
+        test = test.concat("\n Valid move: ");
+        String validMoveString = String.valueOf(validMove);
+        test = test.concat(validMoveString);
+
+        //print the player id
+        test = test.concat("\n Player Id: ");
+        String playerIdString = String.valueOf(playerId);
+        test = test.concat(playerIdString);
+
+        //print player 1 hand visibility (boolean value)
+        test = test.concat("\n Player 1 hand visible: ");
+        String player1HandVisibleString = String.valueOf(p1HandVisible);
+        test = test.concat(player1HandVisibleString);
+
+        //print player 2 hand visibility (boolean value)
+        test = test.concat("\n Player 2 hand visible: ");
+        String player2HandVisibleString = String.valueOf(p2HandVisible);
+        test = test.concat(player2HandVisibleString);
 
 
         return test;
