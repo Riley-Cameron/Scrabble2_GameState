@@ -16,15 +16,11 @@ import java.util.HashMap;
  */
 public class GameState {
     //Establishing variables to be used in the Game State.
-    private String test;
     private ScrabbleDictionary dictionary;
     public boolean gameRunning;
-    public boolean isSwap;
     public int playerTurn;
     public ArrayList<Tile> player1Tiles;
     public ArrayList<Tile> player2Tiles;
-    public boolean isHint;
-    public boolean isSkip;
     public boolean isDoubleLetter;
     public boolean isDoubleWord;
     public Tile[][] board;
@@ -50,11 +46,9 @@ public class GameState {
      */
     public GameState(BufferedReader reader) {
         dictionary = new ScrabbleDictionary(reader);
-        isSwap = false;
         playerTurn = 1;
 
-        isHint = false;
-        isSkip = false;
+
         isDoubleLetter = false;
         isDoubleWord = false;
 
@@ -177,7 +171,11 @@ public class GameState {
         p1Score = g.p1Score;
         p2Score = g.p2Score;
         iqLevel = g.iqLevel;
-        bag = g.bag;
+        bag = new ArrayList<Tile>();
+    for(int i = 0; i < bag.size(); i++ ){
+            Tile temp = new Tile(g.bag.get(i));
+            bag.add(temp);
+        }
         letterInPlay = g.letterInPlay;
         hintWord = g.hintWord;
         validMove = g.validMove;
