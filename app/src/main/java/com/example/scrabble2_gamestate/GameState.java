@@ -167,8 +167,8 @@ public class GameState {
             p2HandVisible = true;
         }
 
-        player1Tiles = null;//TODO: create player starting hands from the bag
-        player2Tiles = null;
+       player1Tiles = g.player1Tiles;
+        player2Tiles = g.player2Tiles;
 
 
         isDoubleLetter = g.isDoubleLetter;
