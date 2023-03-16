@@ -2,6 +2,7 @@ package com.example.scrabble2_gamestate;
 
 import androidx.annotation.NonNull;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,8 +43,8 @@ public class GameState {
     /**
      * GameState is the Constructor that establishes and defines the needed variables & parameters that will be used for the game.
      */
-    public GameState() {
-        dictionary = new ScrabbleDictionary();
+    public GameState(BufferedReader reader) {
+        dictionary = new ScrabbleDictionary(reader);
         isSwap = false;
         playerTurn = 1;
 
@@ -135,15 +136,15 @@ public class GameState {
         //place the tile *if* the board position is empty
         if (board[row][col].getLetter() == ' ') {
             board[row][col] = t;
-        }
 
-        //remove the placed tile from the player's hand
-        if (playerId == 0) {
-            player1Tiles.remove(t);
-        } else {
-            player2Tiles.remove(t);
-        }
+            //remove the placed tile from the player's hand
+            if (playerId == 0) {
+                player1Tiles.remove(t);
+            } else {
+                player2Tiles.remove(t);
+            }
 
+        }
     }
 
     /**
@@ -166,11 +167,11 @@ public class GameState {
      * This method checks the turn of the player and checks the word that is played to validate that it works
      *
      * @param playerId Checks which player is playing
-     * @param wordPlayed Checks what word had been played
      * @return Returns either a true or false response after the method has completed
      */
-    public boolean playWord(int playerId, String wordPlayed) {
-        if (validMove) {
+    public boolean playWord(int playerId) {
+        if (playerId == playerTurn) {
+            String wordPlayed = "BICYCLE";//test word
 
             //Checks if the word has been played and assigns value based on play.
             boolean wordChecker = dictionary.checkWord(wordPlayed);
@@ -222,8 +223,17 @@ public class GameState {
      * @return returns whether action was true or false
      */
     public boolean swapper(int playerId, Tile playTile){
-        if(validMove){
-        bag.add(playTile);
+        if(playerId == playerTurn){
+            bag.add(playTile);//put swapped out tile back in the bag
+
+            //remove the swapped out tile from the correct player's hand and give them a new tile
+            if (playerId == 0) {
+                player1Tiles.remove(playTile);
+                player1Tiles.add(drawFromBag());
+            } else if (playerId == 1) {
+                player2Tiles.remove(playTile);
+                player2Tiles.add(drawFromBag());
+            }
             return true;
         }
         else{
