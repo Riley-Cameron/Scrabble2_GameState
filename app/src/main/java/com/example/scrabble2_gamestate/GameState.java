@@ -46,8 +46,7 @@ public class GameState {
         dictionary = new ScrabbleDictionary();
         isSwap = false;
         playerTurn = 1;
-        player1Tiles = null;//TODO: create player starting hands from the bag
-        player2Tiles = null;
+
         isHint = false;
         isSkip = false;
         isDoubleLetter = false;
@@ -111,6 +110,40 @@ public class GameState {
         makeBag(bag);
         validMove = true;
         playerId = 1;
+
+        //initialize player hands:
+        player1Tiles = new ArrayList<>();
+        player2Tiles = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            player1Tiles.add(drawFromBag());
+            player2Tiles.add(drawFromBag());
+        }
+
+    }
+
+    /**
+     * This method places a tile on the board at the given position
+     *
+     * @param playerId
+     * @param t
+     * @param row
+     * @param col
+     */
+    public void placeTile(int playerId, Tile t, int row, int col) {
+        if (playerId != playerTurn) {return;}//if its not this player's turn, don't place the tile
+
+        //place the tile *if* the board position is empty
+        if (board[row][col].getLetter() == ' ') {
+            board[row][col] = t;
+        }
+
+        //remove the placed tile from the player's hand
+        if (playerId == 0) {
+            player1Tiles.remove(t);
+        } else {
+            player2Tiles.remove(t);
+        }
+
     }
 
     /**
@@ -248,8 +281,18 @@ public class GameState {
     @NonNull
     @Override
     public String toString() {
-        //test bag
-        String test = "test";
+        //Temporary toString to print out player tiles, feel free to change or get rid of in a merge - Riley
+        String test = "";
+        test = test.concat("Player1 Hand: ");
+        for (int i = 0; i < player1Tiles.size(); i++) {
+            test = test.concat("" + player1Tiles.get(i).getLetter());
+        }
+
+        test = test.concat("\nPlayer2 Hand: ");
+        for (int i = 0; i < player2Tiles.size(); i++) {
+            test = test.concat("" + player2Tiles.get(i).getLetter());
+        }
+
         return test;
     }
 }
