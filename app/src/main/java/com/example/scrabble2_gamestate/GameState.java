@@ -107,6 +107,9 @@ public class GameState {
         playerId = 1;
     }
 
+    public void placeTile(int playerId, Tile t, int row, int col) {
+
+    }
 
     public boolean startGame(boolean pressed){
         if(iqLevel != 0){
