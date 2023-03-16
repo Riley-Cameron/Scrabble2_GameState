@@ -334,13 +334,29 @@ public class GameState {
         String test = "";
         test = test.concat("Player1 Hand: ");
         for (int i = 0; i < player1Tiles.size(); i++) {
-            test = test.concat("" + player1Tiles.get(i).getLetter());
+            test = test.concat("[" + player1Tiles.get(i).getLetter() + "]");
         }
 
         test = test.concat("\nPlayer2 Hand: ");
         for (int i = 0; i < player2Tiles.size(); i++) {
-            test = test.concat("" + player2Tiles.get(i).getLetter());
+            test = test.concat("[" + player2Tiles.get(i).getLetter() + "]");
         }
+
+        //print the board:
+        test = test.concat("\nBoard: \n");
+
+        for (int i = 0; i < 15; i++){
+            for (int j = 0; j < 15; j++) {
+                test = test.concat("[" + board[i][j].getLetter() + "]");
+            }
+            test = test.concat("\n");
+        }
+
+        test = test.concat("\n Letters in the Bag: ");
+        for (int i = 0; i< bag.size(); i++) {
+            test = test.concat(bag.get(i).getLetter() + " ");
+        }
+
 
         return test;
     }
