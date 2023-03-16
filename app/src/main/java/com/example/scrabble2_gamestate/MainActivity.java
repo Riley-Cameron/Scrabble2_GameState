@@ -22,14 +22,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button runTest = findViewById(R.id.run_test);
         EditText gsInfo = findViewById(R.id.game_state_info);
-        GameState gs = new GameState();
+        //GameState gs = new GameState();
 
         //Sets the onClickListener to the button object
         runTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Changes text box text based on the toString method's result
-                gsInfo.setText(gs.toString());
+                gsInfo.getText().clear();
+                GameState firstInstance = new GameState();
+                //GameState secondInstance = new GameState(firstInstance);
+                //gsInfo.setText(gs.toString());
             }
         });
     }
