@@ -47,4 +47,11 @@ public class Tile {
     public Tile(Character l){
         letter = l;
     }
+
+    public Tile(Tile t){
+        letter = t.getLetter();
+        score = t.getScore();
+        onBoard = t.isOnBoard();
+    }
+
 }

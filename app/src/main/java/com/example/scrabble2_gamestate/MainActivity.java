@@ -33,23 +33,30 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        GameState gs = new GameState(reader);
+
 
         //Sets the onClickListener to the button object
         runTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                BufferedReader reader = null;
+                try {
+                    reader = new BufferedReader(new InputStreamReader(getAssets().open("dictionary.txt")));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 //Changes text box text based on the toString method's result
                 gsInfo.getText().clear();
-                gsInfo.setText(gs.toString());
-                gs.placeTile(1,gs.player2Tiles.get(3), 8, 8);
-                gs.placeTile(1,gs.player2Tiles.get(3), 7, 8);
-                gs.playWord(1);
-                gs.placeTile(0,gs.player2Tiles.get(1), 6, 8);
+                GameState firstInstance = new GameState(reader);
+                gsInfo.setText(firstInstance.toString());
+                firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 8, 8);
+                firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 7, 8);
+                firstInstance.playWord(1);
+                firstInstance.placeTile(0,firstInstance.player2Tiles.get(1), 6, 8);
+                firstInstance.drawFromBag();
+                //firstInstance.hinter(1);
+                //firstInstance.swapper(1, )
 
-                GameState firstInstance = new GameState();
-                //GameState secondInstance = new GameState(firstInstance);
-                //gsInfo.setText(gs.toString());
             }
         });
     }
