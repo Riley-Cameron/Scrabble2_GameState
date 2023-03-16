@@ -14,8 +14,8 @@ import java.util.HashMap;
  * @author David Leon
  */
 public class GameState {
+    //Establishing variables to be used in the Game State.
     private String test;
-
     private ScrabbleDictionary dictionary;
     public boolean gameRunning;
     public boolean isSwap;
@@ -39,9 +39,9 @@ public class GameState {
     public boolean validMove;
     public int playerId;
 
-
-
-
+    /**
+     * GameState is the Constructor that establishes and defines the needed variables & parameters that will be used for the game.
+     */
     public GameState() {
         dictionary = new ScrabbleDictionary();
         isSwap = false;
@@ -62,12 +62,12 @@ public class GameState {
         }
 
         iqLevel = 0;
-        makeBag(bag);//TODO: implement makeBag method
         letterInPlay = ' ';
         hintWord = " ";
         isPlayed = false;
 
         //Assigning score values for each letter in the HashMap
+        //Letters that are valued at 1
         letterScore.put('A', 1);
         letterScore.put('E', 1);
         letterScore.put('I', 1);
@@ -79,25 +79,31 @@ public class GameState {
         letterScore.put('S', 1);
         letterScore.put('U', 1);
 
+        //Letters that are valued at 2
         letterScore.put('D', 2);
         letterScore.put('G', 2);
 
+        //Letters that are valued at 3
         letterScore.put('B', 3);
         letterScore.put('C', 3);
         letterScore.put('M', 3);
         letterScore.put('P', 3);
 
+        //Letters that are valued at 4
         letterScore.put('F', 4);
         letterScore.put('H', 4);
         letterScore.put('V', 4);
         letterScore.put('W', 4);
         letterScore.put('Y', 4);
 
+        //Letters that are valued at 5
         letterScore.put('K', 5);
 
+        //Letters that are valued at 8
         letterScore.put('J', 8);
         letterScore.put('X', 8);
 
+        //Letters that are valued at 10
         letterScore.put('Q', 10);
         letterScore.put('Z', 10);
 
@@ -107,7 +113,12 @@ public class GameState {
         playerId = 1;
     }
 
-
+    /**
+     * This method starts and establishes the game.
+     *
+     * @param pressed Checks if the button has been pressed to start the Method
+     * @return Returns either a true or false value
+     */
     public boolean startGame(boolean pressed){
         if(iqLevel != 0){
             gameRunning = true;
@@ -118,9 +129,17 @@ public class GameState {
         }
     }
 
+    /**
+     * This method checks the turn of the player and checks the word that is played to validate that it works
+     *
+     * @param playerId Checks which player is playing
+     * @param wordPlayed Checks what word had been played
+     * @return Returns either a true or false response after the method has completed
+     */
     public boolean playWord(int playerId, String wordPlayed) {
         if (validMove) {
 
+            //Checks if the word has been played and assigns value based on play.
             boolean wordChecker = dictionary.checkWord(wordPlayed);
             if (wordChecker) {
                 //wait for hashmap
@@ -142,9 +161,15 @@ public class GameState {
         }
     }
 
-    public boolean skipper(int playId){
+    /**
+     * Establishes a skip method in order for the player to change over their turn
+     *
+     * @param playerId the Player that is current in control
+     * @return returns whether the operation was true or false
+     */
+    public boolean skipper(int playerId){
         if(validMove) {
-            if (playId == 0) {
+            if (playerId == 0) {
                 playerTurn = 1;
             } else {
                 playerTurn = 0;
@@ -156,7 +181,14 @@ public class GameState {
         }
     }
 
-    public boolean swapper(int playId, Tile playTile){
+    /**
+     * Swaps a tile from the bag to be added
+     *
+     * @param playerId Checks which player is currently active
+     * @param playTile Checks the tile that they are swapping
+     * @return returns whether action was true or false
+     */
+    public boolean swapper(int playerId, Tile playTile){
         if(validMove){
         bag.add(playTile);
             return true;
@@ -166,7 +198,13 @@ public class GameState {
         }
     }
 
-    public boolean hinter(int playId){
+    /**
+     * Gives a hint towards the using player when method is active
+     *
+     * @param playerId checks which player is currently using the method
+     * @return Returns whether there is a hint available or no hint available
+     */
+    public boolean hinter(int playerId){
         if(validMove){
         hintWord = "No hint available.";
             return true;
@@ -179,7 +217,7 @@ public class GameState {
 
     /**
      * This method fills the bag array list with the correct amount of each letter Tile
-     * @param bag
+     * @param bag carries the amount of tiles and what tiles that it is valued at
      */
     public void makeBag(ArrayList<Tile> bag) {
         //two arrays make a key for how many of each letter Tile are needed
@@ -187,9 +225,9 @@ public class GameState {
         int[] numLetters = {9,2,2,4,12,2,3,2,9,1,1,4,2,6,8,2,1,6,4,6,4,2,2,1,2,1};
 
         //loop through each letter
-        for (int i = 0;i<26;i++) {
+        for (int i = 0; i < 26; i++) {
             //loop as many times as the given letter is needed
-            for (int j = 0;j<numLetters[i];j++) {
+            for (int j = 0; j < numLetters[i]; j++) {
                 Tile t = new Tile(letters[i]);//create a new tile and pass in the letter
                 Integer score  = letterScore.get(letters[i]);//set the tile score based on the hashmap
                 t.setScore(score);

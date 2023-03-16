@@ -24,10 +24,11 @@ public class MainActivity extends AppCompatActivity {
         EditText gsInfo = findViewById(R.id.game_state_info);
         GameState gs = new GameState();
 
+        //Sets the onClickListener to the button object
         runTest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //Changes text box text based on the toString method's result
                 gsInfo.setText(gs.toString());
             }
         });
