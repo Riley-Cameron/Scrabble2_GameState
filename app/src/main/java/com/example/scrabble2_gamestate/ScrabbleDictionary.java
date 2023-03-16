@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+
 /**
  * Class that implements a scrabble dictionary as a search tree
  * 
@@ -47,13 +48,14 @@ class Node {
 
 public class ScrabbleDictionary {
     Node root = null;
+    BufferedReader reader;
 
-    public ScrabbleDictionary() {
+    public ScrabbleDictionary(BufferedReader r) {
 
         root = new Node('0', false);
 
+        reader = r;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("dictionary.txt"));
             String line = reader.readLine();
             while (line != null) {
                 this.addWord(line);
@@ -61,7 +63,7 @@ public class ScrabbleDictionary {
             }
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+        e.printStackTrace();
         }
     }
 
