@@ -40,6 +40,11 @@ public class GameState {
     public boolean validMove;
     public int playerId;
 
+    public boolean p1HandVisible;
+
+    public boolean p2HandVisible;
+
+
     /**
      * GameState is the Constructor that establishes and defines the needed variables & parameters that will be used for the game.
      */
@@ -60,11 +65,13 @@ public class GameState {
                 board[i][j] = new Tile(' ');
             }
         }
-
+        p1Score = 0;
+        p2Score = 0;
         iqLevel = 0;
         letterInPlay = ' ';
         hintWord = " ";
-        isPlayed = false;
+        p1HandVisible = true;
+        p2HandVisible = false;
 
         //Assigning score values for each letter in the HashMap
         //Letters that are valued at 1
@@ -136,15 +143,47 @@ public class GameState {
         //place the tile *if* the board position is empty
         if (board[row][col].getLetter() == ' ') {
             board[row][col] = t;
-
-            //remove the placed tile from the player's hand
-            if (playerId == 0) {
-                player1Tiles.remove(t);
-            } else {
-                player2Tiles.remove(t);
-            }
-
         }
+        //remove the placed tile from the player's hand
+        if (playerId == 0) {
+            player1Tiles.remove(t);
+        } else {
+            player2Tiles.remove(t);
+        }
+    }
+
+
+
+    public GameState(GameState g) {
+        dictionary = g.dictionary;
+        gameRunning = g.gameRunning;
+        playerTurn = g.playerTurn;
+
+        if (g.playerTurn == 0) {
+            p1HandVisible = true;
+            p2HandVisible = false;
+        } else {
+            p1HandVisible = false;
+            p2HandVisible = true;
+        }
+
+        player1Tiles = null;//TODO: create player starting hands from the bag
+        player2Tiles = null;
+
+
+        isDoubleLetter = g.isDoubleLetter;
+        isDoubleWord = g.isDoubleWord;
+        this.board = g.board;
+        p1Score = g.p1Score;
+        p2Score = g.p2Score;
+        iqLevel = g.iqLevel;
+        bag = g.bag;
+        letterInPlay = g.letterInPlay;
+        hintWord = g.hintWord;
+        validMove = g.validMove;
+
+
+
     }
 
     /**
