@@ -15,7 +15,10 @@ import java.util.HashMap;
  * @author Nick Tabra
  * @author Jacob Arnez
  * @author David Leon
+ *
+ * @Version 3/16/2023
  */
+
 public class GameState {
     //Establishing variables to be used in the Game State.
     private ScrabbleDictionary dictionary;
@@ -37,11 +40,8 @@ public class GameState {
     public HashMap<Character, Integer> letterScore = new HashMap<>();
     public boolean validMove;
     public int playerId;
-
     public boolean p1HandVisible;
-
     public boolean p2HandVisible;
-
 
     /**
      * GameState is the Constructor that establishes and defines the needed variables & parameters that will be used for the game.
@@ -49,7 +49,6 @@ public class GameState {
     public GameState(BufferedReader reader) {
         dictionary = new ScrabbleDictionary(reader);
         playerTurn = 1;
-
 
         isDoubleLetter = false;
         isDoubleWord = false;
@@ -61,6 +60,7 @@ public class GameState {
                 board[i][j] = new Tile(' ');
             }
         }
+
         p1Score = 0;
         p2Score = 0;
         iqLevel = 0;
@@ -126,12 +126,12 @@ public class GameState {
     }
 
     /**
-     * This method places a tile on the board at the given position
+     * This method places a tile on the board at the given position.
      *
-     * @param playerId
-     * @param t
-     * @param row
-     * @param col
+     * @param playerId Checks which player is currently active
+     * @param t This is the tile that is being used
+     * @param row The location in the Row Section
+     * @param col The location in the Column Section
      */
     public void placeTile(int playerId, Tile t, int row, int col) {
         if (playerId != playerTurn) {return;}//if its not this player's turn, don't place the tile
@@ -148,8 +148,11 @@ public class GameState {
         }
     }
 
-
-
+    /**
+     * This method further constructs parts of the game, such as whose hand is visible and adjusts the bag size accordingly.
+     *
+     * @param g The constructed game state that is in use
+     */
     public GameState(GameState g) {
         dictionary = g.dictionary;
         gameRunning = g.gameRunning;
@@ -163,9 +166,8 @@ public class GameState {
             p2HandVisible = true;
         }
 
-       player1Tiles = g.player1Tiles;
+        player1Tiles = g.player1Tiles;
         player2Tiles = g.player2Tiles;
-
 
         isDoubleLetter = g.isDoubleLetter;
         isDoubleWord = g.isDoubleWord;
@@ -173,17 +175,15 @@ public class GameState {
         p1Score = g.p1Score;
         p2Score = g.p2Score;
         iqLevel = g.iqLevel;
+
         bag = new ArrayList<Tile>();
-    for(int i = 0; i < bag.size(); i++ ){
+        for(int i = 0; i < bag.size(); i++ ){
             Tile temp = new Tile(g.bag.get(i));
             bag.add(temp);
         }
         letterInPlay = g.letterInPlay;
         hintWord = g.hintWord;
         validMove = g.validMove;
-
-
-
     }
 
     /**
@@ -203,7 +203,7 @@ public class GameState {
     }
 
     /**
-     * This method checks the turn of the player and checks the word that is played to validate that it works
+     * This method checks the turn of the player and checks the word that is played to validate that it works.
      *
      * @param playerId Checks which player is playing
      * @return Returns either a true or false response after the method has completed
@@ -238,7 +238,7 @@ public class GameState {
     }
 
     /**
-     * Establishes a skip method in order for the player to change over their turn
+     * Establishes a skip method in order for the player to change over their turn.
      *
      * @param playerId the Player that is current in control
      * @return returns whether the operation was true or false
@@ -262,7 +262,7 @@ public class GameState {
     }
 
     /**
-     * Swaps a tile from the bag to be added
+     * Swaps a tile from the bag to be added.
      *
      * @param playerId Checks which player is currently active
      * @param playTile Checks the tile that they are swapping
@@ -291,7 +291,7 @@ public class GameState {
     }
 
     /**
-     * Gives a hint towards the using player when method is active
+     * Gives a hint towards the using player when method is active.
      *
      * @param playerId checks which player is currently using the method
      * @return Returns whether there is a hint available or no hint available
@@ -311,7 +311,8 @@ public class GameState {
     }
 
     /**
-     * This method fills the bag array list with the correct amount of each letter Tile
+     * This method fills the bag array list with the correct amount of each letter Tile.
+     *
      * @param bag carries the amount of tiles and what tiles that it is valued at
      */
     public void makeBag(ArrayList<Tile> bag) {
@@ -332,7 +333,8 @@ public class GameState {
     }
 
     /**
-     * This method removes a Tile from the bag and returns that tile
+     * This method removes a Tile from the bag and returns that tile.
+     *
      * @return random tile
      */
     public Tile drawFromBag() {

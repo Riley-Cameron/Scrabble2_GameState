@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
  * @author Nick Tabra
  * @author Jacob Arnez
  * @author David Leon
+ *
+ * @Version 3/16/2023
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -32,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
         //Sets the onClickListener to the button object
         runTest.setOnClickListener(new View.OnClickListener() {

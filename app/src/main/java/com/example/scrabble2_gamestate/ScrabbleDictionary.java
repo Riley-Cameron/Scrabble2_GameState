@@ -42,8 +42,6 @@ class Node {
     public void addChild(char c, boolean end) {
         childNodes.put(c, new Node(c,end));//adds a node with given char to the hashmap
     }
-
-
 }
 
 public class ScrabbleDictionary {
