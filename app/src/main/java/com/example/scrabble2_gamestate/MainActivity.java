@@ -45,17 +45,28 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                //Changes text box text based on the toString method's result
+                //Clear any previous text before next test run
                 gsInfo.getText().clear();
                 GameState firstInstance = new GameState(reader);
-                gsInfo.setText(firstInstance.toString());
-                firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 8, 8);
+                GameState secondInstance = new GameState(firstInstance);
+                //Changes text box text based on the toString method's result
+
+                //Calling all methods
+                //firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 8, 8);
                 firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 7, 8);
                 firstInstance.playWord(1);
-                firstInstance.placeTile(0,firstInstance.player2Tiles.get(1), 6, 8);
+                //firstInstance.placeTile(0,firstInstance.player1Tiles.get(1), 6, 8);
                 firstInstance.drawFromBag();
-                //firstInstance.hinter(1);
-                //firstInstance.swapper(1, )
+                firstInstance.hinter(1);
+                firstInstance.swapper(0, firstInstance.player1Tiles.get(1));
+                firstInstance.skipper(1);
+                gsInfo.setText(firstInstance.toString());
+
+                GameState thirdInstance = new GameState(reader);
+                GameState fourthInstance = new GameState(thirdInstance);
+
+                secondInstance.toString();
+                fourthInstance.toString();
 
             }
         });

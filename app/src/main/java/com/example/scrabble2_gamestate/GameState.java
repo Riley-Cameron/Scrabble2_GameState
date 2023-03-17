@@ -1,5 +1,7 @@
 package com.example.scrabble2_gamestate;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 
 import java.io.BufferedReader;
@@ -217,9 +219,11 @@ public class GameState {
             if (wordChecker) {
                 //wait for hashmap
                 if (playerId == 0) {
+                    Log.d("TEST", "Player 0 has played the word " + wordPlayed);
                     playerTurn = 1;
                     p1Score++;
                 } else {
+                    Log.d("TEST", "Player 1 has played the word " + wordPlayed);
                     playerTurn = 0;
                     p2Score++;
                 }
@@ -230,6 +234,7 @@ public class GameState {
             }
         }
         else{
+            Log.d("TAG", "Invalid Move for player " + playerId );
             return false;
         }
     }
@@ -243,13 +248,17 @@ public class GameState {
     public boolean skipper(int playerId){
         if(validMove) {
             if (playerId == 0) {
+                Log.d("TEST", "Player 0 has skipped their turn");
                 playerTurn = 1;
             } else {
+                Log.d("TEST", "Player 1 has skipped their turn");
                 playerTurn = 0;
             }
             return true;
         }
         else{
+            Log.d("TAG", "Invalid Move for player " + playerId );
+
             return false;
         }
     }
@@ -269,13 +278,16 @@ public class GameState {
             if (playerId == 0) {
                 player1Tiles.remove(playTile);
                 player1Tiles.add(drawFromBag());
+                Log.d("TEST", "Player 0 has swapped their one of their tiles");
             } else if (playerId == 1) {
                 player2Tiles.remove(playTile);
                 player2Tiles.add(drawFromBag());
+                Log.d("TEST", "Player 1 has swapped their one of their tiles");
             }
             return true;
         }
         else{
+            Log.d("TAG", "Invalid Move for player " + playerId );
             return false;
         }
     }
@@ -288,11 +300,14 @@ public class GameState {
      */
     public boolean hinter(int playerId){
         if(validMove){
-        hintWord = "No hint available.";
+            hintWord = "No hint available.";
+            Log.d("TEST", "Player " + playerId + " has asked for a hint");
             return true;
         }
         else{
             hintWord = "No hint available.";
+            Log.d("TAG", "Invalid Move for player " + playerId );
+
             return false;
         }
     }
@@ -357,7 +372,7 @@ public class GameState {
             test = test.concat(bag.get(i).getLetter() + " ");
         }
 
-
+        Log.d("STRING", test);
         return test;
     }
 }

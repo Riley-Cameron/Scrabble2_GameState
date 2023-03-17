@@ -48,6 +48,11 @@ public class Tile {
         letter = l;
     }
 
+    /**
+     * Deep copy constructor
+     *
+     * @param t
+     */
     public Tile(Tile t){
         letter = t.getLetter();
         score = t.getScore();
