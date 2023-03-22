@@ -54,13 +54,15 @@ public class MainActivity extends AppCompatActivity {
                 //Calling all methods
                 //firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 8, 8);
                 firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 7, 8);
+                firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 7, 7);
+                firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 7, 6);
                 firstInstance.playWord(1);
                 //firstInstance.placeTile(0,firstInstance.player1Tiles.get(1), 6, 8);
                 firstInstance.drawFromBag();
                 firstInstance.hinter(1);
                 firstInstance.swapper(0, firstInstance.player1Tiles.get(1));
                 firstInstance.skipper(1);
-                gsInfo.setText(firstInstance.toString());
+                gsInfo.setText(firstInstance.toString() + "\n" + secondInstance.toString());
 
                 GameState thirdInstance = new GameState(reader);
                 GameState fourthInstance = new GameState(thirdInstance);

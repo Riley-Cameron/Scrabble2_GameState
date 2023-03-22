@@ -43,6 +43,10 @@ public class GameState {
     public boolean p1HandVisible;
     public boolean p2HandVisible;
 
+    //constants for word direction
+    public static final int DOWN = 0;
+    public static final int ACROSS = 1;
+
     /**
      * GameState is the Constructor that establishes and defines the needed variables & parameters that will be used for the game.
      */
@@ -58,6 +62,7 @@ public class GameState {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
                 board[i][j] = new Tile(' ');
+                board[i][j].setOnBoard(true);
             }
         }
 
@@ -177,7 +182,7 @@ public class GameState {
         iqLevel = g.iqLevel;
 
         bag = new ArrayList<Tile>();
-        for(int i = 0; i < bag.size(); i++ ){
+        for(int i = 0; i < g.bag.size(); i++ ){
             Tile temp = new Tile(g.bag.get(i));
             bag.add(temp);
         }
@@ -208,9 +213,123 @@ public class GameState {
      * @param playerId Checks which player is playing
      * @return Returns either a true or false response after the method has completed
      */
-    public boolean playWord(int playerId) {
+    public boolean playWord(int playerId) {//TODO: check perpendicular words
         if (playerId == playerTurn) {
-            String wordPlayed = "BICYCLE";//test word
+            String wordPlayed = "";
+
+            //algorithm for finding what word was played on the grid
+            int wordDir = -1;
+            Tile firstLetter = null;
+            int row1 = -1;
+            int col1 = -1;
+            Tile secondLetter = null;
+            int row2 = -1;
+            int col2 = -1;
+            ArrayList<Tile> lettersPlayed = new ArrayList<>();
+            int rowStart = -1;
+            int colStart = -1;
+
+            //find first and second letters played
+            for (int i = 0; i < 15; i++) {
+                if (secondLetter != null) break;
+                for (int j = 0; j < 15; j++) {
+                    if (!board[i][j].isOnBoard()) {
+                        if (firstLetter == null) {
+                            firstLetter = board[i][j];
+                            row1 = i;
+                            col1 = j;
+                        } else {
+                            secondLetter = board[i][j];
+                            row2 = i;
+                            col2 = j;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            //if they did not play a word return null
+            if (firstLetter == null) {
+                Log.d("TAG", "Player " + playerId + " did not play a letter");
+                return false;
+            }
+
+            //set word direction;
+            if (row1 == row2) wordDir = ACROSS;
+            if (col1 == col2) wordDir = DOWN;
+
+            //case for a single letter being played:
+            if (secondLetter == null) {
+                //check grid around firstLetter
+                if (row1+1 < 15 && board[row1+1][col1].getLetter() != ' ') {
+                    secondLetter = board[row1+1][col1];
+                    wordDir = DOWN;
+                } else if (row1-1 > 0 && board[row1-1][col1].getLetter() != ' ') {
+                    secondLetter = board[row1-1][col1];
+                    wordDir = DOWN;
+                } else if (col1+1 < 15 && board[row1][col1+1].getLetter() != ' ') {
+                    secondLetter = board[row1][col1+1];
+                    wordDir = ACROSS;
+                } else if (col1-1 > 0 && board[row1][col1-1].getLetter() != ' ') {
+                    secondLetter = board[row1][col1-1];
+                    wordDir = DOWN;
+                }
+
+                return false;//the word played is a single letter that isn't connected to any other tiles
+            }
+
+            //find the starting letter of the word (might not be a tile that was just played)
+            colStart = col1;
+            rowStart = row1;
+            if (wordDir == ACROSS) {
+                int i = col1-1;
+                while (i >= 0) {
+                    if (board[row1][i].getLetter() != ' ') {
+                        colStart = i;
+                        i--;
+                    } else {
+                        break;
+                    }
+                }
+            } else if (wordDir == DOWN) {
+                int i = row1-1;
+                while (i >= 0) {
+                    if (board[i][col1].getLetter() != ' ') {
+                        rowStart = i;
+                        i--;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            //add letters to the array list starting at the 'start letter'
+            if (wordDir == ACROSS) {
+                int i = colStart;
+                while (i >= 0) {
+                    if (board[rowStart][i].getLetter() != ' ') {
+                        lettersPlayed.add(board[rowStart][i]);
+                        i++;
+                    } else {
+                        break;
+                    }
+                }
+            } else if (wordDir == DOWN) {
+                int i = rowStart;
+                while (i >= 0) {
+                    if (board[i][colStart].getLetter() != ' ') {
+                        lettersPlayed.add(board[i][colStart]);
+                        i++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            //convert arrayList of Tiles into a String
+            for (int i = 0;i < lettersPlayed.size();i++) {
+                wordPlayed = wordPlayed.concat(Character.toString(lettersPlayed.get(i).getLetter()));
+            }
 
             //Checks if the word has been played and assigns value based on play.
             boolean wordChecker = dictionary.checkWord(wordPlayed);
@@ -327,6 +446,7 @@ public class GameState {
                 Tile t = new Tile(letters[i]);//create a new tile and pass in the letter
                 Integer score  = letterScore.get(letters[i]);//set the tile score based on the hashmap
                 t.setScore(score);
+                t.setOnBoard(false);
                 bag.add(t);//add it to the bag
             }
         }
