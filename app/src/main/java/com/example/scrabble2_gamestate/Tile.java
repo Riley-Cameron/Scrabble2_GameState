@@ -55,6 +55,7 @@ public class Tile {
     //Configures the tile based on the character
     public Tile(Character l){
         letter = l;
+        onBoard = false;
     }
 
     /**

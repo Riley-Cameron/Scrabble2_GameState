@@ -47,22 +47,61 @@ public class MainActivity extends AppCompatActivity {
                 }
                 //Clear any previous text before next test run
                 gsInfo.getText().clear();
+                String toPrint = "";
                 GameState firstInstance = new GameState(reader);
                 GameState secondInstance = new GameState(firstInstance);
                 //Changes text box text based on the toString method's result
 
                 //Calling all methods
                 //firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 8, 8);
-                firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 7, 8);
-                firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 7, 7);
-                firstInstance.placeTile(1,firstInstance.player2Tiles.get(3), 7, 6);
+                firstInstance.player2Tiles.clear();
+                firstInstance.player2Tiles.add(0, new Tile ('D'));
+                firstInstance.player2Tiles.add(1, new Tile ('O'));
+                firstInstance.player2Tiles.add(2, new Tile ('G'));
+                firstInstance.player2Tiles.add(3, new Tile ('S'));
+                firstInstance.player2Tiles.add(4, new Tile ('C'));
+                firstInstance.player2Tiles.add(5, new Tile ('A'));
+                firstInstance.player2Tiles.add(6, new Tile ('T'));
+
+                firstInstance.player1Tiles.clear();
+                firstInstance.player1Tiles.add(0, new Tile ('O'));
+                firstInstance.player1Tiles.add(1, new Tile ('L'));
+                firstInstance.player1Tiles.add(2, new Tile ('F'));
+                firstInstance.player1Tiles.add(3, new Tile ('E'));
+                firstInstance.player1Tiles.add(4, new Tile ('R'));
+                firstInstance.player1Tiles.add(5, new Tile ('A'));
+                firstInstance.player1Tiles.add(6, new Tile ('T'));
+
+                firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 0, 6);
+                firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 1, 6);
+                firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 2, 6);
+                firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 3, 6);
+
+                toPrint = toPrint.concat(firstInstance.toString());
+                gsInfo.setText(toPrint);
+
                 firstInstance.playWord(1);
-                //firstInstance.placeTile(0,firstInstance.player1Tiles.get(1), 6, 8);
-                firstInstance.drawFromBag();
+
                 firstInstance.hinter(1);
-                firstInstance.swapper(0, firstInstance.player1Tiles.get(1));
+                firstInstance.swapper(0, firstInstance.player1Tiles.get(6));
                 firstInstance.skipper(1);
-                gsInfo.setText(firstInstance.toString() + "\n" + secondInstance.toString());
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 7);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 8);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 9);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 10);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 11);
+                toPrint = toPrint.concat("\n" + firstInstance.toString());
+                gsInfo.setText(toPrint);
+
+                firstInstance.playWord(0);
+                toPrint = toPrint.concat("\n\n" + firstInstance.toString() + "\n");
+                gsInfo.setText(toPrint);
+
+                firstInstance.placeTile(1, firstInstance.player2Tiles.get(2), 1, 5);
+                firstInstance.playWord(1);
+                toPrint = toPrint.concat("\n\n" + firstInstance.toString() + "\n");
+                gsInfo.setText(toPrint);
+
 
                 GameState thirdInstance = new GameState(reader);
                 GameState fourthInstance = new GameState(thirdInstance);

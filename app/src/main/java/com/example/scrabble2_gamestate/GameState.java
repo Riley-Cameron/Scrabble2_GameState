@@ -216,6 +216,7 @@ public class GameState {
     public boolean playWord(int playerId) {//TODO: check perpendicular words
         if (playerId == playerTurn) {
             String wordPlayed = "";
+            Boolean wordChecker = false;
 
             //algorithm for finding what word was played on the grid
             int wordDir = -1;
@@ -273,9 +274,9 @@ public class GameState {
                 } else if (col1-1 > 0 && board[row1][col1-1].getLetter() != ' ') {
                     secondLetter = board[row1][col1-1];
                     wordDir = DOWN;
+                } else {
+                    return false;//the word played is a single letter that isn't connected to any other tiles
                 }
-
-                return false;//the word played is a single letter that isn't connected to any other tiles
             }
 
             //find the starting letter of the word (might not be a tile that was just played)
@@ -326,20 +327,44 @@ public class GameState {
                 }
             }
 
+
             //convert arrayList of Tiles into a String
             for (int i = 0;i < lettersPlayed.size();i++) {
                 wordPlayed = wordPlayed.concat(Character.toString(lettersPlayed.get(i).getLetter()));
             }
 
             //Checks if the word has been played and assigns value based on play.
-            boolean wordChecker = dictionary.checkWord(wordPlayed);
+            wordChecker = dictionary.checkWord(wordPlayed);
+
+            //check that the number of letters played matches the number absent in the players hand
+            int numPlayedFound = 0;
+            for (Tile t : lettersPlayed) {
+                if (!t.isOnBoard()) numPlayedFound++;
+            }
+            if (playerId == 0 && 7-player1Tiles.size() != numPlayedFound) {
+                wordChecker = false;
+            } else if (playerId == 1 && 7-player2Tiles.size() != numPlayedFound) {
+                wordChecker = false;
+            }
+
             if (wordChecker) {
+                //set 'onBoard' to true for tiles played
+                for (Tile t : lettersPlayed) {
+                    t.setOnBoard(true);
+                }
                 //wait for hashmap
                 if (playerId == 0) {
+                    //draw back up to hand size:
+                    while (player1Tiles.size() < 7) {
+                        player1Tiles.add(drawFromBag());
+                    }
                     Log.d("TEST", "Player 0 has played the word " + wordPlayed);
                     playerTurn = 1;
-                    p1Score++;
+                    p1Score++;//TODO: calculate correct score to add
                 } else {
+                    while (player2Tiles.size() < 7) {
+                        player2Tiles.add(drawFromBag());
+                    }
                     Log.d("TEST", "Player 1 has played the word " + wordPlayed);
                     playerTurn = 0;
                     p2Score++;
@@ -347,12 +372,39 @@ public class GameState {
                 return true;
             }
             else {
+                //put letters back into player's hand:
+                for (Tile[] row : board) {
+                    for (Tile t : row) {
+                        if (playerId == 0 && !t.isOnBoard()) {
+                            player1Tiles.add(t);
+                        } else if (playerId == 1 && !t.isOnBoard()) {
+                            player2Tiles.add(t);
+                        }
+                    }
+                }
+
+                cleanBoard();
+
                 return false;
             }
         }
         else{
             Log.d("TAG", "Invalid Move for player " + playerId );
             return false;
+        }
+    }
+
+    /**
+     * Clears the board of any Tile objects that do not have their 'onBoard' parameter set to true
+     */
+    public void cleanBoard() {
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                if (!board[i][j].isOnBoard()) {
+                    board[i][j] = new Tile(' ');
+                    board[i][j].setOnBoard(true);
+                }
+            }
         }
     }
 
@@ -488,7 +540,11 @@ public class GameState {
 
         for (int i = 0; i < 15; i++){
             for (int j = 0; j < 15; j++) {
-                test = test.concat("[" + board[i][j].getLetter() + "]");
+                if (board[i][j].getLetter() == ' ') {
+                    test = test.concat("[  ]");
+                } else {
+                    test = test.concat("[" + board[i][j].getLetter() + "]");
+                }
             }
             test = test.concat("\n");
         }
