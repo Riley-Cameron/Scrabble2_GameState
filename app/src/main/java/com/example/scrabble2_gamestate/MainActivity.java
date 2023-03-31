@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 firstInstance.player2Tiles.add(3, new Tile ('S'));
                 firstInstance.player2Tiles.add(4, new Tile ('C'));
                 firstInstance.player2Tiles.add(5, new Tile ('A'));
-                firstInstance.player2Tiles.add(6, new Tile ('T'));
+                firstInstance.player2Tiles.add(6, new Tile ('N'));
 
                 firstInstance.player1Tiles.clear();
                 firstInstance.player1Tiles.add(0, new Tile ('O'));
@@ -69,36 +69,33 @@ public class MainActivity extends AppCompatActivity {
                 firstInstance.player1Tiles.add(2, new Tile ('F'));
                 firstInstance.player1Tiles.add(3, new Tile ('E'));
                 firstInstance.player1Tiles.add(4, new Tile ('R'));
-                firstInstance.player1Tiles.add(5, new Tile ('A'));
-                firstInstance.player1Tiles.add(6, new Tile ('T'));
+                firstInstance.player1Tiles.add(5, new Tile ('K'));
+                firstInstance.player1Tiles.add(6, new Tile ('I'));
 
                 firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 0, 6);
                 firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 1, 6);
                 firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 2, 6);
                 firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 3, 6);
-
+                firstInstance.playWord(1);
                 toPrint = toPrint.concat(firstInstance.toString());
                 gsInfo.setText(toPrint);
 
-                firstInstance.playWord(1);
-
                 firstInstance.hinter(1);
-                firstInstance.swapper(0, firstInstance.player1Tiles.get(6));
                 firstInstance.skipper(1);
                 firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 7);
                 firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 8);
                 firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 9);
                 firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 10);
                 firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 11);
-                toPrint = toPrint.concat("\n" + firstInstance.toString());
-                gsInfo.setText(toPrint);
 
                 firstInstance.playWord(0);
                 toPrint = toPrint.concat("\n\n" + firstInstance.toString() + "\n");
                 gsInfo.setText(toPrint);
 
-                firstInstance.placeTile(1, firstInstance.player2Tiles.get(2), 1, 5);
-                firstInstance.playWord(1);
+                firstInstance.skipper(1);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 3, 7);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 3, 8);
+                firstInstance.playWord(0);
                 toPrint = toPrint.concat("\n\n" + firstInstance.toString() + "\n");
                 gsInfo.setText(toPrint);
 

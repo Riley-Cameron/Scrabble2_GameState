@@ -28,6 +28,9 @@ public class GameState {
     public ArrayList<Tile> player2Tiles;
     public boolean isDoubleLetter;
     public boolean isDoubleWord;
+
+    public int[][]pointKey;
+
     public Tile[][] board;
     public int p1Score;
     public int p2Score;
@@ -213,7 +216,7 @@ public class GameState {
      * @param playerId Checks which player is playing
      * @return Returns either a true or false response after the method has completed
      */
-    public boolean playWord(int playerId) {//TODO: check perpendicular words
+    public boolean playWord(int playerId) {//TODO: word scores, double letters/words, start move
         if (playerId == playerTurn) {
             String wordPlayed = "";
             Boolean wordChecker = false;
@@ -327,11 +330,19 @@ public class GameState {
                 }
             }
 
+            //make a list of perpendicular words:
+            ArrayList<String> perpWords = new ArrayList<>();
+            for (Tile t : lettersPlayed) {
+                if (!t.isOnBoard()) {
+                    //add word branching from this tile to the perpWords list
+                    perpWords.add(findPerpWord(t, wordDir));
+                }
+            }
+
+
 
             //convert arrayList of Tiles into a String
-            for (int i = 0;i < lettersPlayed.size();i++) {
-                wordPlayed = wordPlayed.concat(Character.toString(lettersPlayed.get(i).getLetter()));
-            }
+            wordPlayed = tilesToString(lettersPlayed);
 
             //Checks if the word has been played and assigns value based on play.
             wordChecker = dictionary.checkWord(wordPlayed);
@@ -347,6 +358,18 @@ public class GameState {
                 wordChecker = false;
             }
 
+            //check to make sure the new word was played off and existing word:
+            /*if (wordPlayed.length() == numPlayedFound) {
+                wordChecker = false;
+            }*/
+
+            //check each perpendicular word:
+            for (String word : perpWords) {
+                if (word.length() > 1 && !dictionary.checkWord(word)) {
+                    wordChecker = false;
+                }
+            }
+
             if (wordChecker) {
                 //set 'onBoard' to true for tiles played
                 for (Tile t : lettersPlayed) {
@@ -358,14 +381,30 @@ public class GameState {
                     while (player1Tiles.size() < 7) {
                         player1Tiles.add(drawFromBag());
                     }
-                    Log.d("TEST", "Player 0 has played the word " + wordPlayed);
+
+                    String info = "Player 0 has played the word " + wordPlayed + ", to form:";
+                    for (String word : perpWords) {
+                        if (word.length() > 1) {
+                            info = info.concat(" " + word);
+                        }
+                    }
+
+                    Log.d("TEST", info);
                     playerTurn = 1;
                     p1Score++;//TODO: calculate correct score to add
                 } else {
                     while (player2Tiles.size() < 7) {
                         player2Tiles.add(drawFromBag());
                     }
-                    Log.d("TEST", "Player 1 has played the word " + wordPlayed);
+
+                    String info = "Player 1 has played the word " + wordPlayed + ", to form:";
+                    for (String word : perpWords) {
+                        if (word.length() > 1) {
+                            info = info.concat(" " + word);
+                        }
+                    }
+
+                    Log.d("TEST", info);
                     playerTurn = 0;
                     p2Score++;
                 }
@@ -395,6 +434,57 @@ public class GameState {
     }
 
     /**
+     * This method finds the words connected to a given tile that are perpendicular to the word direction
+     *
+     * @param t
+     * @param wordDir
+     * @return the word perpendicular to Tile t as a string
+     */
+    public String findPerpWord(Tile t, int wordDir) {
+        ArrayList<Tile> lettersInWord = new ArrayList<>();
+        int startCol = getTileCol(t);
+        int startRow = getTileRow(t);
+
+        //across case
+        if (wordDir == ACROSS) {
+            //find the start position of the perp word
+            while (startRow-1 >= 0) {
+                if (board[startRow-1][startCol].getLetter() != ' ') {
+                    startRow--;
+                } else {
+                    break;
+                }
+            }
+
+            //loop back through all the consecutive letters to form a word
+            int i = startRow;
+            while (i <= 14 && board[i][startCol].getLetter() != ' ') {
+                lettersInWord.add(board[i][startCol]);
+                i++;
+            }
+        } else {//down case
+            //find the start position of the perp word
+            while (startCol-1 >= 0) {
+                if (board[startRow][startCol-1].getLetter() != ' ') {
+                    startCol--;
+                } else {
+                    break;
+                }
+            }
+
+            //loop back through all the consecutive letters to form a word
+            int i = startCol;
+            while (i <= 14 && board[startRow][i].getLetter() != ' ') {
+                lettersInWord.add(board[startRow][i]);
+                i++;
+            }
+        }
+
+        return tilesToString(lettersInWord);
+    }
+
+
+    /**
      * Clears the board of any Tile objects that do not have their 'onBoard' parameter set to true
      */
     public void cleanBoard() {
@@ -406,6 +496,59 @@ public class GameState {
                 }
             }
         }
+    }
+
+    /**
+     * Converts a list of Tiles to a string
+     *
+     * @param list
+     * @return String:word
+     */
+    public String tilesToString(ArrayList<Tile> list) {
+        String word = "";
+        for (int i = 0;i < list.size();i++) {
+            word = word.concat(Character.toString(list.get(i).getLetter()));
+        }
+
+        return word;
+    }
+
+    /**
+     * returns the row of a given tile:  (-1 means it is not on the board)
+     *
+     * @param t
+     * @return row
+     */
+    public int getTileRow(Tile t) {
+        int row = -1;
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                if (board[i][j].equals(t)) {
+                    row = i;
+                }
+            }
+        }
+
+        return row;
+    }
+
+    /**
+     * returns the column of a given tile:  (-1 means it is not on the board)
+     *
+     * @param t
+     * @return col
+     */
+    public int getTileCol(Tile t) {
+        int col = -1;
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                if (board[i][j].equals(t)) {
+                    col = j;
+                }
+            }
+        }
+
+        return col;
     }
 
     /**

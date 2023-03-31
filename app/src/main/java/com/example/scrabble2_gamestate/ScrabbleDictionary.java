@@ -1,5 +1,7 @@
 package com.example.scrabble2_gamestate;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -89,18 +91,18 @@ public class ScrabbleDictionary {
 
         for (int i = 0; i < strLen; i++) {
             if (currentNode.getChild(word.charAt(i)) == null) {
-                System.out.println(word + " is not a legal word");
+                Log.d("DICT", word + " is not a legal word");
                 return false;
             } else {
                 currentNode = currentNode.getChild(word.charAt(i));
 
-                if (currentNode.getIsWord() == true && i == strLen-1) {
-                    System.out.println(word + " is a legal word");
+                if (currentNode.getIsWord() && i == strLen-1) {
+                    Log.d("DICT", word + " is a legal word");
                     return true;
                 }
             }
         }
-        System.out.println(word + " is not a legal word");
+        Log.d("DICT", word + " is not a legal word");
         return false;
     }
 }
