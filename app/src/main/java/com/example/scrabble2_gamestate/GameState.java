@@ -50,6 +50,12 @@ public class GameState {
     public static final int DOWN = 0;
     public static final int ACROSS = 1;
 
+    //constants for board mapping:
+    public static final int START = 3;
+    public static final int D_LETTER = 1;
+    public static final int D_WORD = 2;
+    public static final int EMPTY = 0;
+
     /**
      * GameState is the Constructor that establishes and defines the needed variables & parameters that will be used for the game.
      */
@@ -68,6 +74,24 @@ public class GameState {
                 board[i][j].setOnBoard(true);
             }
         }
+
+        //init board point key
+        pointKey = new int[15][15];
+        pointKey[0] = new int[]{D_WORD, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_WORD, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, D_WORD};
+        pointKey[1] = new int[]{EMPTY, D_WORD, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_WORD, EMPTY};
+        pointKey[2] = new int[]{EMPTY, EMPTY, D_WORD, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_WORD, EMPTY, EMPTY};
+        pointKey[3] = new int[]{D_LETTER, EMPTY, EMPTY, D_WORD, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_WORD, EMPTY, EMPTY, D_LETTER};
+        pointKey[4] = new int[]{EMPTY, EMPTY, EMPTY, EMPTY, D_WORD, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, D_WORD, EMPTY, EMPTY, EMPTY, EMPTY};
+        pointKey[5] = new int[]{EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY};
+        pointKey[6] = new int[]{EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY};
+        pointKey[7] = new int[]{D_WORD, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, START, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, D_WORD};
+        pointKey[8] = new int[]{EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY};
+        pointKey[9] = new int[]{EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY};
+        pointKey[10] = new int[]{EMPTY, EMPTY, EMPTY, EMPTY, D_WORD, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, D_WORD, EMPTY, EMPTY, EMPTY, EMPTY};
+        pointKey[11] = new int[]{D_LETTER, EMPTY, EMPTY, D_WORD, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_WORD, EMPTY, EMPTY, D_LETTER};
+        pointKey[12] = new int[]{EMPTY, EMPTY, D_WORD, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_WORD, EMPTY, EMPTY};
+        pointKey[13] = new int[]{EMPTY, D_WORD, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_WORD, EMPTY};
+        pointKey[14] = new int[]{D_WORD, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, EMPTY, D_WORD, EMPTY, EMPTY, EMPTY, D_LETTER, EMPTY, EMPTY, D_WORD};
 
         p1Score = 0;
         p2Score = 0;
@@ -134,6 +158,68 @@ public class GameState {
     }
 
     /**
+     * This method further constructs parts of the game, such as whose hand is visible and adjusts the bag size accordingly.
+     *
+     * @param g The constructed game state that is in use
+     */
+    public GameState(GameState g) {
+        dictionary = g.dictionary;
+        gameRunning = g.gameRunning;
+        playerTurn = g.playerTurn;
+
+        if (g.playerTurn == 0) {
+            p1HandVisible = true;
+            p2HandVisible = false;
+        } else {
+            p1HandVisible = false;
+            p2HandVisible = true;
+        }
+
+        player1Tiles = new ArrayList<>();
+        for (Tile t : g.player1Tiles) {
+            player1Tiles.add(new Tile(t));
+        }
+
+        player2Tiles = new ArrayList<>();
+        for (Tile t : g.player2Tiles) {
+            player2Tiles.add(new Tile(t));
+        }
+
+        isDoubleLetter = g.isDoubleLetter;
+        isDoubleWord = g.isDoubleWord;
+
+        //copy board
+        board = new Tile[15][15];
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                board[i][j] = new Tile(g.board[i][j]);
+            }
+        }
+
+        p1Score = g.p1Score;
+        p2Score = g.p2Score;
+        iqLevel = g.iqLevel;
+
+        bag = new ArrayList<Tile>();
+        for(int i = 0; i < g.bag.size(); i++ ){
+            Tile temp = new Tile(g.bag.get(i));
+            bag.add(temp);
+        }
+
+        //copy pointKey
+        pointKey = new int[15][15];
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++) {
+                pointKey[i][j] = g.pointKey[i][j];
+            }
+        }
+
+        letterInPlay = g.letterInPlay;
+        hintWord = g.hintWord;
+        validMove = g.validMove;
+    }
+
+    /**
      * This method places a tile on the board at the given position.
      *
      * @param playerId Checks which player is currently active
@@ -154,44 +240,6 @@ public class GameState {
         } else {
             player2Tiles.remove(t);
         }
-    }
-
-    /**
-     * This method further constructs parts of the game, such as whose hand is visible and adjusts the bag size accordingly.
-     *
-     * @param g The constructed game state that is in use
-     */
-    public GameState(GameState g) {
-        dictionary = g.dictionary;
-        gameRunning = g.gameRunning;
-        playerTurn = g.playerTurn;
-
-        if (g.playerTurn == 0) {
-            p1HandVisible = true;
-            p2HandVisible = false;
-        } else {
-            p1HandVisible = false;
-            p2HandVisible = true;
-        }
-
-        player1Tiles = g.player1Tiles;
-        player2Tiles = g.player2Tiles;
-
-        isDoubleLetter = g.isDoubleLetter;
-        isDoubleWord = g.isDoubleWord;
-        this.board = g.board;
-        p1Score = g.p1Score;
-        p2Score = g.p2Score;
-        iqLevel = g.iqLevel;
-
-        bag = new ArrayList<Tile>();
-        for(int i = 0; i < g.bag.size(); i++ ){
-            Tile temp = new Tile(g.bag.get(i));
-            bag.add(temp);
-        }
-        letterInPlay = g.letterInPlay;
-        hintWord = g.hintWord;
-        validMove = g.validMove;
     }
 
     /**
@@ -665,8 +713,9 @@ public class GameState {
     @NonNull
     @Override
     public String toString() {
-        //print player 1 tiles
         String test = "";
+
+        //print player 1 tiles
         test = test.concat("Player1 tiles: ");
         for (int i = 0; i < player1Tiles.size(); i++) {
             test = test.concat("[" + player1Tiles.get(i).getLetter() + "]");
