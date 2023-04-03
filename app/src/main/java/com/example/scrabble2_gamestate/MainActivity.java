@@ -72,10 +72,10 @@ public class MainActivity extends AppCompatActivity {
                 firstInstance.player1Tiles.add(5, new Tile ('K'));
                 firstInstance.player1Tiles.add(6, new Tile ('I'));
 
-                firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 0, 6);
-                firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 1, 6);
-                firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 2, 6);
-                firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 3, 6);
+                firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 4, 7);
+                firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 5, 7);
+                firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 6, 7);
+                firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 7, 7);
                 firstInstance.playWord(1);
                 toPrint = toPrint.concat(firstInstance.toString());
                 gsInfo.setText(toPrint);

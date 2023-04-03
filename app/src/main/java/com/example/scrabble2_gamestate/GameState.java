@@ -23,11 +23,11 @@ public class GameState {
     //Establishing variables to be used in the Game State.
     private ScrabbleDictionary dictionary;
     public boolean gameRunning;
+
+    public boolean firstPlay;
     public int playerTurn;
     public ArrayList<Tile> player1Tiles;
     public ArrayList<Tile> player2Tiles;
-    public boolean isDoubleLetter;
-    public boolean isDoubleWord;
 
     public int[][]pointKey;
 
@@ -61,10 +61,7 @@ public class GameState {
      */
     public GameState(BufferedReader reader) {
         dictionary = new ScrabbleDictionary(reader);
-        playerTurn = 1;
-
-        isDoubleLetter = false;
-        isDoubleWord = false;
+        playerTurn = 1;//1 gives p2 the first move, change to 0 later!
 
         //init board to null (represents empty tile)
         board = new Tile[15][15];
@@ -100,6 +97,7 @@ public class GameState {
         hintWord = " ";
         p1HandVisible = true;
         p2HandVisible = false;
+        firstPlay = true;
 
         //Assigning score values for each letter in the HashMap
         //Letters that are valued at 1
@@ -158,7 +156,7 @@ public class GameState {
     }
 
     /**
-     * This method further constructs parts of the game, such as whose hand is visible and adjusts the bag size accordingly.
+     * This method is the copy constructor
      *
      * @param g The constructed game state that is in use
      */
@@ -166,6 +164,7 @@ public class GameState {
         dictionary = g.dictionary;
         gameRunning = g.gameRunning;
         playerTurn = g.playerTurn;
+        firstPlay = g.firstPlay;
 
         if (g.playerTurn == 0) {
             p1HandVisible = true;
@@ -184,9 +183,6 @@ public class GameState {
         for (Tile t : g.player2Tiles) {
             player2Tiles.add(new Tile(t));
         }
-
-        isDoubleLetter = g.isDoubleLetter;
-        isDoubleWord = g.isDoubleWord;
 
         //copy board
         board = new Tile[15][15];
@@ -264,7 +260,7 @@ public class GameState {
      * @param playerId Checks which player is playing
      * @return Returns either a true or false response after the method has completed
      */
-    public boolean playWord(int playerId) {//TODO: word scores, double letters/words, start move
+    public boolean playWord(int playerId) {//TODO: word scores
         if (playerId == playerTurn) {
             String wordPlayed = "";
             Boolean wordChecker = false;
@@ -406,10 +402,10 @@ public class GameState {
                 wordChecker = false;
             }
 
-            //check to make sure the new word was played off and existing word:
-            /*if (wordPlayed.length() == numPlayedFound) {
+            //check to make sure the new word was played off an existing word:
+            if (wordPlayed.length() == numPlayedFound && !firstPlay) {
                 wordChecker = false;
-            }*/
+            }
 
             //check each perpendicular word:
             for (String word : perpWords) {
@@ -418,6 +414,23 @@ public class GameState {
                 }
             }
 
+            //starting play case: word must be played off the center square
+            if (firstPlay) {
+                boolean foundMatch = false;
+                for (Tile t : lettersPlayed) {
+                    if (pointKey[getTileRow(t)][getTileCol(t)] == START) {
+                        foundMatch = true;
+                    }
+                }
+
+                if (foundMatch) {
+                    firstPlay = false;
+                } else {
+                    wordChecker = false;
+                }
+            }
+
+            //all checks are finished when entering this if statement:
             if (wordChecker) {
                 //set 'onBoard' to true for tiles played
                 for (Tile t : lettersPlayed) {
@@ -754,16 +767,6 @@ public class GameState {
         test = test.concat("\n Game running: ");
         String gameStateString = String.valueOf(gameRunning);
         test = test.concat(gameStateString);
-
-        //print double letters (boolean value)
-        test = test.concat("\n Double letter: ");
-        String isDoubleLetterString = String.valueOf(isDoubleLetter);
-        test = test.concat(isDoubleLetterString);
-
-        //print double words (boolean value)
-        test = test.concat("\n Double word: ");
-        String isDoubleWordString = String.valueOf(isDoubleWord);
-        test = test.concat(isDoubleWordString);
 
         //print player 1 score
         test = test.concat("\n Player 1 score: ");
