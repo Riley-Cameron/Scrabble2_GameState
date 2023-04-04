@@ -25,13 +25,16 @@ public class Tile {
      * onBoard - Boolean variable to check if the tile is onBoard in a valid position when the player end their turn
      * score - represents the score of the tiles letter using the Integer Object
      */
+    //Establishes the Score Variable
+    private Integer score;
+    //Establishes variable for letter
+    private Character letter;
 
     //Retrieves letter when called
     public Character getLetter() {
         return letter;
     }
-    //Establishes variable for letter
-    private Character letter;
+
     //Checks value of the onBoard variable
     public boolean isOnBoard() {
         return onBoard;
@@ -50,12 +53,12 @@ public class Tile {
     public void setScore(Integer score) {
         this.score = score;
     }
-    //Establishes the Score Variable
-    private Integer score;
+
     //Configures the tile based on the character
     public Tile(Character l){
         letter = l;
         onBoard = false;
+        score = 0;
     }
 
     /**

@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 gsInfo.getText().clear();
                 String toPrint = "";
                 GameState firstInstance = new GameState(reader);
-                GameState secondInstance = new GameState(firstInstance);
+
                 //Changes text box text based on the toString method's result
 
                 //Calling all methods
@@ -77,29 +77,28 @@ public class MainActivity extends AppCompatActivity {
                 firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 6, 7);
                 firstInstance.placeTile(1,firstInstance.player2Tiles.get(0), 7, 7);
                 firstInstance.playWord(1);
+                GameState secondInstance = new GameState(firstInstance);
                 toPrint = toPrint.concat(firstInstance.toString());
-                gsInfo.setText(toPrint);
 
                 firstInstance.hinter(1);
                 firstInstance.skipper(1);
-                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 7);
-                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 8);
-                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 9);
-                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 10);
-                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 2, 11);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 6, 8);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 6, 9);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 6, 10);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 6, 11);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 6, 12);
 
                 firstInstance.playWord(0);
                 toPrint = toPrint.concat("\n\n" + firstInstance.toString() + "\n");
-                gsInfo.setText(toPrint);
 
                 firstInstance.skipper(1);
-                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 3, 7);
-                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 3, 8);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 7, 8);
+                firstInstance.placeTile(0, firstInstance.player1Tiles.get(0), 7, 9);
                 firstInstance.playWord(0);
                 toPrint = toPrint.concat("\n\n" + firstInstance.toString() + "\n");
+
+                toPrint = toPrint.concat("\nCopy (2): \n" + secondInstance.toString());
                 gsInfo.setText(toPrint);
-
-
                 GameState thirdInstance = new GameState(reader);
                 GameState fourthInstance = new GameState(thirdInstance);
 

@@ -19,7 +19,7 @@ import java.util.HashMap;
  * @Version 3/16/2023
  */
 
-public class GameState {
+public class GameState {//TODO: logic for ending the game (when bag is empty)
     //Establishing variables to be used in the Game State.
     private ScrabbleDictionary dictionary;
     public boolean gameRunning;
@@ -62,6 +62,7 @@ public class GameState {
     public GameState(BufferedReader reader) {
         dictionary = new ScrabbleDictionary(reader);
         playerTurn = 1;//1 gives p2 the first move, change to 0 later!
+        gameRunning = true;//creating a gameState should start the game
 
         //init board to null (represents empty tile)
         board = new Tile[15][15];
@@ -238,21 +239,6 @@ public class GameState {
         }
     }
 
-    /**
-     * This method starts and establishes the game.
-     *
-     * @param pressed Checks if the button has been pressed to start the Method
-     * @return Returns either a true or false value
-     */
-    public boolean startGame(boolean pressed){
-        if(iqLevel != 0){
-            gameRunning = true;
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 
     /**
      * This method checks the turn of the player and checks the word that is played to validate that it works.
@@ -260,10 +246,10 @@ public class GameState {
      * @param playerId Checks which player is playing
      * @return Returns either a true or false response after the method has completed
      */
-    public boolean playWord(int playerId) {//TODO: word scores
+    public boolean playWord(int playerId) {
         if (playerId == playerTurn) {
             String wordPlayed = "";
-            Boolean wordChecker = false;
+            boolean wordChecker = false;
 
             //algorithm for finding what word was played on the grid
             int wordDir = -1;
@@ -375,7 +361,7 @@ public class GameState {
             }
 
             //make a list of perpendicular words:
-            ArrayList<String> perpWords = new ArrayList<>();
+            ArrayList<ArrayList<Tile>> perpWords = new ArrayList<>();
             for (Tile t : lettersPlayed) {
                 if (!t.isOnBoard()) {
                     //add word branching from this tile to the perpWords list
@@ -408,8 +394,8 @@ public class GameState {
             }
 
             //check each perpendicular word:
-            for (String word : perpWords) {
-                if (word.length() > 1 && !dictionary.checkWord(word)) {
+            for (ArrayList<Tile> word : perpWords) {
+                if (word.size() > 1 && !dictionary.checkWord(tilesToString(word))) {
                     wordChecker = false;
                 }
             }
@@ -432,11 +418,6 @@ public class GameState {
 
             //all checks are finished when entering this if statement:
             if (wordChecker) {
-                //set 'onBoard' to true for tiles played
-                for (Tile t : lettersPlayed) {
-                    t.setOnBoard(true);
-                }
-                //wait for hashmap
                 if (playerId == 0) {
                     //draw back up to hand size:
                     while (player1Tiles.size() < 7) {
@@ -444,30 +425,35 @@ public class GameState {
                     }
 
                     String info = "Player 0 has played the word " + wordPlayed + ", to form:";
-                    for (String word : perpWords) {
-                        if (word.length() > 1) {
-                            info = info.concat(" " + word);
+                    for (ArrayList<Tile> word : perpWords) {
+                        if (word.size() > 1) {
+                            info = info.concat(" " + tilesToString(word));
                         }
                     }
 
                     Log.d("TEST", info);
                     playerTurn = 1;
-                    p1Score++;//TODO: calculate correct score to add
+                    p1Score += calculateScore(lettersPlayed, perpWords);
                 } else {
                     while (player2Tiles.size() < 7) {
                         player2Tiles.add(drawFromBag());
                     }
 
                     String info = "Player 1 has played the word " + wordPlayed + ", to form:";
-                    for (String word : perpWords) {
-                        if (word.length() > 1) {
-                            info = info.concat(" " + word);
+                    for (ArrayList<Tile> word : perpWords) {
+                        if (word.size() > 1) {
+                            info = info.concat(" " + tilesToString(word));
                         }
                     }
 
                     Log.d("TEST", info);
                     playerTurn = 0;
-                    p2Score++;
+                    p2Score += calculateScore(lettersPlayed, perpWords);
+                }
+
+                //set 'onBoard' to true for tiles played
+                for (Tile t : lettersPlayed) {
+                    t.setOnBoard(true);
                 }
                 return true;
             }
@@ -495,13 +481,58 @@ public class GameState {
     }
 
     /**
+     * This method finds the score of a given play by adding up the points of all the new words that are formed
+     *
+     * @param word - 'main' word that was played
+     * @param perpWords - new words formed that branch off the main word
+     * @return totalScore - the number of points earned
+     */
+    public int calculateScore(ArrayList<Tile> word, ArrayList<ArrayList<Tile>> perpWords) {//TODO: dont count points of single letter perpendicular 'words'
+        int totalScore = 0;
+        int multiplier = 1;
+
+        int wordScore = 0;//temporary score for each word
+        for (Tile t : word) {//score for main word that was played
+            int letterMultiplier = 1;
+            if (!t.isOnBoard()) {//check if the square is a double letter/word
+                if (pointKey[getTileRow(t)][getTileCol(t)] == D_LETTER) {
+                    letterMultiplier *= 2;
+                }
+                if (pointKey[getTileRow(t)][getTileCol(t)] == D_WORD || pointKey[getTileRow(t)][getTileCol(t)] == START) {
+                    multiplier *= 2;
+                }
+            }
+            wordScore += (t.getScore() * letterMultiplier);//add each letter score to the word score
+        }
+        totalScore += wordScore * multiplier;//add the word score to the total score
+
+        //add the points for each perpendicular word - same method as above
+        for (ArrayList<Tile> w : perpWords) {
+            wordScore = 0;
+            multiplier = 1;
+            for (Tile t : w) {
+                int letterMultiplier = 1;
+                if (!t.isOnBoard()) {
+                    if (pointKey[getTileRow(t)][getTileCol(t)] == D_LETTER) letterMultiplier *= 2;
+                    if (pointKey[getTileRow(t)][getTileCol(t)] == D_WORD || pointKey[getTileRow(t)][getTileCol(t)] == START)
+                        multiplier *= 2;
+                }
+                wordScore += (t.getScore().intValue() * letterMultiplier);
+            }
+            totalScore += wordScore * multiplier;
+        }
+
+        return totalScore;
+    }
+
+    /**
      * This method finds the words connected to a given tile that are perpendicular to the word direction
      *
      * @param t
      * @param wordDir
      * @return the word perpendicular to Tile t as a string
      */
-    public String findPerpWord(Tile t, int wordDir) {
+    public ArrayList<Tile> findPerpWord(Tile t, int wordDir) {
         ArrayList<Tile> lettersInWord = new ArrayList<>();
         int startCol = getTileCol(t);
         int startRow = getTileRow(t);
@@ -541,7 +572,7 @@ public class GameState {
             }
         }
 
-        return tilesToString(lettersInWord);
+        return lettersInWord;
     }
 
 
